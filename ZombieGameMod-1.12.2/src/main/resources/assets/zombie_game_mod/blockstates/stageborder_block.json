@@ -1,0 +1,10 @@
+{
+  "forge_marker": 1,
+  "defaults": {
+    "model": "zombie_game_mod:stageborder_block",
+    "uvlock": true
+  },
+  "variants": {
+    "normal": [{}]
+  }
+}
