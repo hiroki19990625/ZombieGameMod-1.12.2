@@ -1,5 +1,24 @@
 #ja_JP lang
+
+
+#Block
 tile.stageborder_block.name=Stage Boader Block
+
+
+#Item
 item.gun_mp5.name=MP5
+
+
+#ToolTip
 tooltip.gun.ammoStat=Ammo / MaxAmmo : %s / %s
 tooltip.gun.stackAmmo=StackAmmo : %s
+
+
+#Tab
+itemGroup.zombie_game_mod_tab=Zombie Game Mod
+itemGroup.zombie_game_mod_gun_tab=Zombie Game Mod Guns
+
+
+#Key
+key.zombie_game_mod.category=Zombie Game Mod Control
+key.gun_reload.desc=Gun Reload Key

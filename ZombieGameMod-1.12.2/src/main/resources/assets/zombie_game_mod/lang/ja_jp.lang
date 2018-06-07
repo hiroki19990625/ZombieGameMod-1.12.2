@@ -1,5 +1,24 @@
 #ja_JP lang
+
+
+#Block
 tile.stageborder_block.name=ステージボーダーブロック
+
+
+#Item
 item.gun_mp5.name=MP5
+
+
+#ToolTip
 tooltip.gun.ammoStat=装弾数 / 最大装弾数 : %s / %s
 tooltip.gun.stackAmmo=予備弾数 : %s
+
+
+#Tab
+itemGroup.zombie_game_mod_tab=Zombie Game Mod
+itemGroup.zombie_game_mod_gun_tab=Zombie Game Mod Guns
+
+
+#Key
+key.zombie_game_mod.category=Zombie Game Mod 操作
+key.gun_reload.desc=Gun リロードキー

@@ -5,9 +5,12 @@ import net.minecraft.world.World;
 
 public class NormalAmmoEntity extends GunAmmoBaseEntity {
 
+	public NormalAmmoEntity(World worldIn) {
+		super(worldIn);
+	}
+
 	public NormalAmmoEntity(World worldIn, EntityLivingBase shooter) {
 		super(worldIn, shooter);
-		// TODO 自動生成されたコンストラクター・スタブ
 	}
 
 }

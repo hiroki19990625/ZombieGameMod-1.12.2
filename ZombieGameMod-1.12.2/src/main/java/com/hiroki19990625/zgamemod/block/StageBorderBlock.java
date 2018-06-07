@@ -22,12 +22,6 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class StageBorderBlock extends Block {
 
-	public static StageBorderBlock block;
-
-	public static void createInstance() {
-		block = new StageBorderBlock();
-	}
-
 	public StageBorderBlock() {
 		super(Material.ROCK, MapColor.YELLOW);
 

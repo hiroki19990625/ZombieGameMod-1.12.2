@@ -1,0 +1,14 @@
+{
+	"mp5_shot_sound":
+	{
+		"category": "item",
+    	"subtitle": "zombie_game_mod.mp5_shot_sound",
+    	"sounds": [ "zombie_game_mod:mp5_shot_sound" ]
+	},
+	"mp5_reload_sound":
+	{
+		"category": "item",
+    	"subtitle": "zombie_game_mod.mp5_reload_sound",
+    	"sounds": [ "zombie_game_mod:mp5_reload_sound" ]
+	}
+}

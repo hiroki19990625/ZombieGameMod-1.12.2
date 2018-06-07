@@ -6,7 +6,7 @@ import com.hiroki19990625.zgamemod.ModCore;
 import com.hiroki19990625.zgamemod.entity.ammo.GunAmmoBaseEntity;
 import com.hiroki19990625.zgamemod.entity.ammo.NormalAmmoEntity;
 import com.hiroki19990625.zgamemod.handler.InputKeyBindingManager;
-import com.hiroki19990625.zgamemod.tab.ZombieGameModTab;
+import com.hiroki19990625.zgamemod.tab.ZombieGameModGunTab;
 
 import net.minecraft.client.resources.I18n;
 import net.minecraft.client.util.ITooltipFlag;
@@ -19,8 +19,8 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumHand;
-import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundCategory;
+import net.minecraft.util.SoundEvent;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.registry.ForgeRegistries;
 import net.minecraftforge.fml.relauncher.Side;
@@ -32,7 +32,7 @@ public abstract class GunBaseItem extends Item {
 		this.setRegistryName(ModCore.MOD_ID, name);
 		this.setUnlocalizedName(name);
 		this.setMaxStackSize(1);
-		this.setCreativeTab(ZombieGameModTab.zombieGameModTab);
+		this.setCreativeTab(ZombieGameModGunTab.zombieGameModGunTab);
 		this.setFull3D();
 
 		ForgeRegistries.ITEMS.register(this);
@@ -46,6 +46,9 @@ public abstract class GunBaseItem extends Item {
 		int maxAmmo = this.getMaxAmmo();
 		int ammo = gun.getInteger("Ammo");
 		int stackAmmo = gun.getInteger("StackAmmo");
+		int i = (int) entityIn.posX;
+		int j = (int) entityIn.posY;
+		int k = (int) entityIn.posZ;
 
 		if (InputKeyBindingManager.reloadKey.isKeyDown()) {
 			if (ammo < maxAmmo) {
@@ -61,6 +64,11 @@ public abstract class GunBaseItem extends Item {
 					ammo = ammoCal;
 					stackAmmo -= ammoCal;
 				}
+
+				worldIn.playSound((EntityPlayer) null, (double) i + 0.5D, (double) j + 0.5D, (double) k + 0.5D,
+						this.getReloadSound(),
+						SoundCategory.NEUTRAL, 1.0F, 1.0F
+								/ (itemRand.nextFloat() * 0.4F + 1.2F));
 			}
 		}
 
@@ -95,8 +103,7 @@ public abstract class GunBaseItem extends Item {
 			int j = (int) par3EntityPlayer.posY;
 			int k = (int) par3EntityPlayer.posZ;
 			par2World.playSound((EntityPlayer) null, (double) i + 0.5D, (double) j + 0.5D, (double) k + 0.5D,
-					(net.minecraft.util.SoundEvent) net.minecraft.util.SoundEvent.REGISTRY
-							.getObject(new ResourceLocation(("entity.arrow.shoot"))),
+					this.getShotSound(),
 					SoundCategory.NEUTRAL, 1.0F, 1.0F
 							/ (itemRand.nextFloat() * 0.4F + 1.2F) + f * 0.5F);
 			if (!par2World.isRemote) {
@@ -158,6 +165,10 @@ public abstract class GunBaseItem extends Item {
 	public abstract int getMaxAmmo();
 
 	public abstract int getMaxStackAmmo();
+
+	public abstract SoundEvent getShotSound();
+
+	public abstract SoundEvent getReloadSound();
 
 	public int getUseDuration() {
 		return 0;

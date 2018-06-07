@@ -7,17 +7,16 @@ import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-public class ZombieGameModTab extends CreativeTabs {
+public class ZombieGameModGunTab extends CreativeTabs {
+	public static ZombieGameModGunTab zombieGameModGunTab = new ZombieGameModGunTab();
 
-	public static ZombieGameModTab zombieGameModTab = new ZombieGameModTab();
-
-	public ZombieGameModTab() {
-		super("zombie_game_mod_tab");
+	public ZombieGameModGunTab() {
+		super("zombie_game_mod_gun_tab");
 	}
 
 	@Override
 	@SideOnly(Side.CLIENT)
 	public ItemStack getTabIconItem() {
-		return new ItemStack(RegisterManager.stageBorderBlock);
+		return new ItemStack(RegisterManager.mp5);
 	}
 }

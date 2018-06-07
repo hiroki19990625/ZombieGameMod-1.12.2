@@ -1,12 +1,10 @@
 package com.hiroki19990625.zgamemod.item.gun;
 
+import com.hiroki19990625.zgamemod.RegisterManager;
+
+import net.minecraft.util.SoundEvent;
+
 public class MP5 extends GunBaseItem {
-
-	public static MP5 gun;
-
-	public static void createInstance() {
-		gun = new MP5();
-	}
 
 	public MP5() {
 		super("gun_mp5");
@@ -20,6 +18,16 @@ public class MP5 extends GunBaseItem {
 	@Override
 	public int getMaxStackAmmo() {
 		return 120;
+	}
+
+	public SoundEvent getShotSound() {
+		// TODO 自動生成されたメソッド・スタブ
+		return RegisterManager.mp5_shot_sound;
+	}
+
+	public SoundEvent getReloadSound() {
+		// TODO 自動生成されたメソッド・スタブ
+		return RegisterManager.mp5_reload_sound;
 	}
 
 }

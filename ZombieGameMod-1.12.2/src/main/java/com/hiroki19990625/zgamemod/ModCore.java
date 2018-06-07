@@ -1,8 +1,6 @@
 package com.hiroki19990625.zgamemod;
 
-import com.hiroki19990625.zgamemod.block.StageBorderBlock;
 import com.hiroki19990625.zgamemod.handler.InputKeyBindingManager;
-import com.hiroki19990625.zgamemod.item.gun.MP5;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.ItemModelMesher;
@@ -26,6 +24,8 @@ public class ModCore {
 	@Instance(MOD_ID)
 	public static ModCore instance;
 
+	public static RegisterManager manager;
+
 	public static InputKeyBindingManager inputKeyBindingManager = new InputKeyBindingManager();
 
 	@EventHandler
@@ -35,21 +35,19 @@ public class ModCore {
 
 	@EventHandler
 	public void preInit(FMLPreInitializationEvent event) {
-		StageBorderBlock.createInstance();
-
-		MP5.createInstance();
+		ModCore.manager = new RegisterManager();
 	}
 
 	@EventHandler
 	public void load(FMLInitializationEvent event) {
 		ItemModelMesher modelMesher = Minecraft.getMinecraft().getRenderItem().getItemModelMesher();
 
-		this.loadModel(modelMesher, Item.getItemFromBlock(StageBorderBlock.block));
+		this.registerModel(modelMesher, Item.getItemFromBlock(RegisterManager.stageBorderBlock));
 
-		this.loadModel(modelMesher, MP5.gun);
+		this.registerModel(modelMesher, RegisterManager.mp5);
 	}
 
-	private void loadModel(ItemModelMesher modelMesher, Item item) {
+	private void registerModel(ItemModelMesher modelMesher, Item item) {
 		modelMesher.register(item, 0,
 				new ModelResourceLocation(item.getRegistryName(), "inventory"));
 	}
