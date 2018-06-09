@@ -3,13 +3,11 @@ package com.hiroki19990625.zgamemod;
 import org.apache.logging.log4j.Logger;
 
 import com.hiroki19990625.zgamemod.handler.InputKeyBindingHandler;
-import com.hiroki19990625.zgamemod.handler.MainMenuHandler;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.ItemModelMesher;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.item.Item;
-import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventHandler;
 import net.minecraftforge.fml.common.Mod.Instance;
@@ -32,11 +30,10 @@ public class ModCore {
 	public static RegisterManager manager;
 
 	public static InputKeyBindingHandler inputKeyBindingHandler = new InputKeyBindingHandler();
-	public static MainMenuHandler mainMenuHandler = new MainMenuHandler();
 
 	@EventHandler
 	public void construct(FMLConstructionEvent event) {
-		MinecraftForge.EVENT_BUS.register(mainMenuHandler);
+		//MinecraftForge.EVENT_BUS.register(mainMenuHandler);
 	}
 
 	@EventHandler
@@ -51,6 +48,7 @@ public class ModCore {
 		ItemModelMesher modelMesher = Minecraft.getMinecraft().getRenderItem().getItemModelMesher();
 
 		this.registerModel(modelMesher, Item.getItemFromBlock(RegisterManager.stageBorderBlock));
+		this.registerModel(modelMesher, Item.getItemFromBlock(RegisterManager.gameSetupBlock));
 
 		this.registerModel(modelMesher, RegisterManager.mp5);
 	}

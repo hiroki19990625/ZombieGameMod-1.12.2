@@ -1,5 +1,6 @@
 package com.hiroki19990625.zgamemod;
 
+import com.hiroki19990625.zgamemod.block.GameSetupBlock;
 import com.hiroki19990625.zgamemod.block.StageBorderBlock;
 import com.hiroki19990625.zgamemod.entity.ammo.NormalAmmoEntity;
 import com.hiroki19990625.zgamemod.item.gun.MP5;
@@ -12,6 +13,7 @@ public class RegisterManager {
 
 	//Blocks
 	public static StageBorderBlock stageBorderBlock;
+	public static GameSetupBlock gameSetupBlock;
 
 	//Items
 	public static MP5 mp5;
@@ -29,6 +31,7 @@ public class RegisterManager {
 
 	public void registerBlocks() {
 		stageBorderBlock = new StageBorderBlock();
+		gameSetupBlock = new GameSetupBlock();
 	}
 
 	public void registerItems() {
