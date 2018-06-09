@@ -53,7 +53,7 @@ public abstract class GunAmmoBaseEntity extends EntityArrow {
 		}
 
 		if (!this.hasNoGravity()) {
-			this.motionY += 0.04000000074505806D;
+			//this.motionY += 0.04000000074505806D;
 		}
 	}
 

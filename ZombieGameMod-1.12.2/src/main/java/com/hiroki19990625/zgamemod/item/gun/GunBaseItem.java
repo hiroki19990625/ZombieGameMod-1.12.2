@@ -5,7 +5,7 @@ import java.util.List;
 import com.hiroki19990625.zgamemod.ModCore;
 import com.hiroki19990625.zgamemod.entity.ammo.GunAmmoBaseEntity;
 import com.hiroki19990625.zgamemod.entity.ammo.NormalAmmoEntity;
-import com.hiroki19990625.zgamemod.handler.InputKeyBindingManager;
+import com.hiroki19990625.zgamemod.handler.InputKeyBindingHandler;
 import com.hiroki19990625.zgamemod.tab.ZombieGameModGunTab;
 
 import net.minecraft.client.resources.I18n;
@@ -50,7 +50,7 @@ public abstract class GunBaseItem extends Item {
 		int j = (int) entityIn.posY;
 		int k = (int) entityIn.posZ;
 
-		if (InputKeyBindingManager.reloadKey.isKeyDown()) {
+		if (InputKeyBindingHandler.reloadKey.isKeyDown()) {
 			if (ammo < maxAmmo) {
 				if (stackAmmo <= 0) {
 					stackAmmo = 0;
@@ -92,13 +92,9 @@ public abstract class GunBaseItem extends Item {
 		int stackAmmo = gun.getInteger("StackAmmo");
 
 		if (ammo != 0) {
-			ammo--;
+			ammo -= this.getDiffAmmo();
 
-			float f = 1.0F;
-			GunAmmoBaseEntity entityarrow = this.getAmmoEntity(par2World, par3EntityPlayer);
-			entityarrow.shoot(par3EntityPlayer.getLookVec().x, par3EntityPlayer.getLookVec().y,
-					par3EntityPlayer.getLookVec().z, f * 2.0F, 0);
-
+			float f = this.getAmmoSpeed();
 			int i = (int) par3EntityPlayer.posX;
 			int j = (int) par3EntityPlayer.posY;
 			int k = (int) par3EntityPlayer.posZ;
@@ -107,7 +103,8 @@ public abstract class GunBaseItem extends Item {
 					SoundCategory.NEUTRAL, 1.0F, 1.0F
 							/ (itemRand.nextFloat() * 0.4F + 1.2F) + f * 0.5F);
 			if (!par2World.isRemote) {
-				par2World.spawnEntity(entityarrow);
+				GunAmmoBaseEntity entity = this.shot(par2World, par3EntityPlayer);
+				par2World.spawnEntity(entity);
 			}
 		} else {
 
@@ -162,6 +159,14 @@ public abstract class GunBaseItem extends Item {
 		stack.setTagCompound(nbt);
 	}
 
+	public GunAmmoBaseEntity shot(World par2World, EntityPlayer par3EntityPlayer) {
+		GunAmmoBaseEntity entityarrow = this.getAmmoEntity(par2World, par3EntityPlayer);
+		entityarrow.shoot(par3EntityPlayer.getLookVec().x, par3EntityPlayer.getLookVec().y,
+				par3EntityPlayer.getLookVec().z, this.getAmmoSpeed() * 2.0F, 0);
+
+		return entityarrow;
+	}
+
 	public abstract int getMaxAmmo();
 
 	public abstract int getMaxStackAmmo();
@@ -172,6 +177,14 @@ public abstract class GunBaseItem extends Item {
 
 	public int getUseDuration() {
 		return 0;
+	}
+
+	public float getAmmoSpeed() {
+		return 5;
+	}
+
+	public int getDiffAmmo() {
+		return 1;
 	}
 
 	public GunAmmoBaseEntity getAmmoEntity(World worldIn, EntityLivingBase shooter) {

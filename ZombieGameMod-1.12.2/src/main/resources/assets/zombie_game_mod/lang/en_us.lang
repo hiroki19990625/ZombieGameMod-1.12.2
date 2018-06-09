@@ -22,3 +22,7 @@ itemGroup.zombie_game_mod_gun_tab=Zombie Game Mod Guns
 #Key
 key.zombie_game_mod.category=Zombie Game Mod Control
 key.gun_reload.desc=Gun Reload Key
+
+
+#GUI
+gui.zombie_game_mod.main_menu.button=Play Zombie Game

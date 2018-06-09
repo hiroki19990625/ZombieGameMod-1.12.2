@@ -1,6 +1,9 @@
 package com.hiroki19990625.zgamemod;
 
-import com.hiroki19990625.zgamemod.handler.InputKeyBindingManager;
+import org.apache.logging.log4j.Logger;
+
+import com.hiroki19990625.zgamemod.handler.InputKeyBindingHandler;
+import com.hiroki19990625.zgamemod.handler.MainMenuHandler;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.ItemModelMesher;
@@ -24,17 +27,22 @@ public class ModCore {
 	@Instance(MOD_ID)
 	public static ModCore instance;
 
+	public static Logger logger;
+
 	public static RegisterManager manager;
 
-	public static InputKeyBindingManager inputKeyBindingManager = new InputKeyBindingManager();
+	public static InputKeyBindingHandler inputKeyBindingHandler = new InputKeyBindingHandler();
+	public static MainMenuHandler mainMenuHandler = new MainMenuHandler();
 
 	@EventHandler
 	public void construct(FMLConstructionEvent event) {
-		MinecraftForge.EVENT_BUS.register(inputKeyBindingManager);
+		MinecraftForge.EVENT_BUS.register(mainMenuHandler);
 	}
 
 	@EventHandler
 	public void preInit(FMLPreInitializationEvent event) {
+		logger = event.getModLog();
+
 		ModCore.manager = new RegisterManager();
 	}
 
