@@ -10,6 +10,7 @@ import net.minecraft.entity.monster.EntityEnderman;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.entity.projectile.EntityArrow;
+import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.play.server.SPacketChangeGameState;
@@ -22,6 +23,7 @@ import net.minecraft.world.World;
 public abstract class GunAmmoBaseEntity extends EntityArrow {
 
 	private Block inTile;
+	private BlockPos hitPos;
 	private int knockbackStrength;
 
 	public GunAmmoBaseEntity(World worldIn) {
@@ -120,6 +122,8 @@ public abstract class GunAmmoBaseEntity extends EntityArrow {
 				//this.playSound(SoundEvents.ENTITY_ARROW_HIT, 1.0F, 1.2F / (this.rand.nextFloat() * 0.2F + 0.9F));
 
 				if (!(entity instanceof EntityEnderman)) {
+					entity.world.playEvent(2001, entity.getPosition(),
+							Block.getStateId(Blocks.BARRIER.getDefaultState()));
 					this.setDead();
 				}
 			} else {
@@ -138,11 +142,8 @@ public abstract class GunAmmoBaseEntity extends EntityArrow {
 				}
 			}
 		} else {
-			BlockPos blockpos = raytraceResultIn.getBlockPos();
-			blockpos.getX();
-			blockpos.getY();
-			blockpos.getZ();
-			IBlockState iblockstate = this.world.getBlockState(blockpos);
+			this.hitPos = raytraceResultIn.getBlockPos();
+			IBlockState iblockstate = this.world.getBlockState(this.hitPos);
 			this.inTile = iblockstate.getBlock();
 			this.inTile.getMetaFromState(iblockstate);
 			this.motionX = (double) ((float) (raytraceResultIn.hitVec.x - this.posX));
@@ -155,11 +156,12 @@ public abstract class GunAmmoBaseEntity extends EntityArrow {
 			this.posZ -= this.motionZ / (double) f2 * 0.05000000074505806D;
 			//this.playSound(SoundEvents.ENTITY_ARROW_HIT, 1.0F, 1.2F / (this.rand.nextFloat() * 0.2F + 0.9F));
 			this.inGround = true;
-			this.arrowShake = 7;
+			this.arrowShake = 1;
 			this.setIsCritical(false);
 
 			if (iblockstate.getMaterial() != Material.AIR) {
-				this.inTile.onEntityCollidedWithBlock(this.world, blockpos, iblockstate, this);
+				this.world.playEvent(2001, this.hitPos, Block.getStateId(iblockstate));
+				this.inTile.onEntityCollidedWithBlock(this.world, this.hitPos, iblockstate, this);
 			}
 		}
 	}
