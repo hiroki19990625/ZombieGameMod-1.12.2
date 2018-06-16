@@ -21,10 +21,13 @@ import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.play.server.SPacketChangeGameState;
+import net.minecraft.network.play.server.SPacketTitle;
+import net.minecraft.network.play.server.SPacketTitle.Type;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.RayTraceResult;
+import net.minecraft.util.text.Style;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
@@ -39,14 +42,14 @@ public abstract class GunAmmoBaseEntity extends EntityArrow {
 		super(worldIn);
 
 		this.pickupStatus = PickupStatus.DISALLOWED;
-		this.setSize(0.5F, 0.5F);
+		this.setSize(0.25F, 0.25F);
 	}
 
 	public GunAmmoBaseEntity(World worldIn, EntityLivingBase shooter) {
 		super(worldIn, shooter);
 
 		this.pickupStatus = PickupStatus.DISALLOWED;
-		this.setSize(0.5F, 0.5F);
+		this.setSize(0.25F, 0.25F);
 	}
 
 	@Override
@@ -77,16 +80,18 @@ public abstract class GunAmmoBaseEntity extends EntityArrow {
 					.sqrt(this.motionX * this.motionX + this.motionY * this.motionY + this.motionZ * this.motionZ);
 			int i = MathHelper.ceil((double) f * this.getDamage());
 
-			if (this.getIsCritical()) {
-				i += this.rand.nextInt(i / 2 + 2);
-			}
-
 			if (entity.posY + entity.getEyeHeight() - 0.4F < this.posY
 					&& this.posY < entity.posY + entity.getEyeHeight() + 0.4F && !isBadEntity(entity)) {
 				i *= 2;
 
-				if ((this.shootingEntity instanceof EntityPlayer)) {
-					this.shootingEntity.sendMessage(new TextComponentString(TextFormatting.RED + "Head Shot!"));
+				if (this.shootingEntity instanceof EntityPlayerMP) {
+					TextComponentString textComponentString = new TextComponentString("Head Shot!!!!");
+					Style style = new Style();
+					style.setBold(true);
+					style.setColor(TextFormatting.GOLD);
+					textComponentString.setStyle(style);
+					SPacketTitle sPacketTitle = new SPacketTitle(Type.ACTIONBAR, textComponentString);
+					((EntityPlayerMP) this.shootingEntity).connection.sendPacket(sPacketTitle);
 				}
 			}
 
@@ -145,33 +150,13 @@ public abstract class GunAmmoBaseEntity extends EntityArrow {
 					this.setDead();
 				}
 			} else {
-				this.motionX *= -0.10000000149011612D;
-				this.motionY *= -0.10000000149011612D;
-				this.motionZ *= -0.10000000149011612D;
-				this.rotationYaw += 180.0F;
-				this.prevRotationYaw += 180.0F;
-				if (!this.world.isRemote && this.motionX * this.motionX + this.motionY * this.motionY
-						+ this.motionZ * this.motionZ < 0.0010000000474974513D) {
-					if (this.pickupStatus == EntityArrow.PickupStatus.ALLOWED) {
-						this.entityDropItem(this.getArrowStack(), 0.1F);
-					}
-
-					this.setDead();
-				}
+				this.setDead();
 			}
 		} else {
 			this.hitPos = raytraceResultIn.getBlockPos();
 			IBlockState iblockstate = this.world.getBlockState(this.hitPos);
 			this.inTile = iblockstate.getBlock();
 			this.inTile.getMetaFromState(iblockstate);
-			this.motionX = (double) ((float) (raytraceResultIn.hitVec.x - this.posX));
-			this.motionY = (double) ((float) (raytraceResultIn.hitVec.y - this.posY));
-			this.motionZ = (double) ((float) (raytraceResultIn.hitVec.z - this.posZ));
-			float f2 = MathHelper
-					.sqrt(this.motionX * this.motionX + this.motionY * this.motionY + this.motionZ * this.motionZ);
-			this.posX -= this.motionX / (double) f2 * 0.05000000074505806D;
-			this.posY -= this.motionY / (double) f2 * 0.05000000074505806D;
-			this.posZ -= this.motionZ / (double) f2 * 0.05000000074505806D;
 			//this.playSound(SoundEvents.ENTITY_ARROW_HIT, 1.0F, 1.2F / (this.rand.nextFloat() * 0.2F + 0.9F));
 			this.inGround = true;
 			this.arrowShake = 1;

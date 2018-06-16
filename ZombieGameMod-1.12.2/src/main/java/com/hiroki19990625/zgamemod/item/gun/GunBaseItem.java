@@ -50,19 +50,21 @@ public abstract class GunBaseItem extends Item {
 		int j = (int) entityIn.posY;
 		int k = (int) entityIn.posZ;
 
+		if (stackAmmo <= 0) {
+			stackAmmo = 0;
+			return;
+		}
+
 		if (InputKeyBindingHandler.reloadKey.isKeyDown()) {
 			if (ammo < maxAmmo) {
-				if (stackAmmo <= 0) {
-					stackAmmo = 0;
-					return;
-				} else if (stackAmmo >= maxAmmo) {
+				if (stackAmmo >= maxAmmo) {
 					int ammoCal = maxAmmo - ammo;
 					ammo = maxAmmo;
 					stackAmmo -= ammoCal;
 				} else {
-					int ammoCal = stackAmmo - ammo;
+					int ammoCal = maxAmmo - ammo;
 					ammo = ammoCal;
-					stackAmmo -= ammoCal;
+					stackAmmo = 0;
 				}
 
 				worldIn.playSound((EntityPlayer) null, (double) i + 0.5D, (double) j + 0.5D, (double) k + 0.5D,

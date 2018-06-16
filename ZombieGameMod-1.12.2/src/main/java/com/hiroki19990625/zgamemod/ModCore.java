@@ -2,12 +2,14 @@ package com.hiroki19990625.zgamemod;
 
 import org.apache.logging.log4j.Logger;
 
+import com.hiroki19990625.zgamemod.gui.GunStatsGui;
 import com.hiroki19990625.zgamemod.handler.InputKeyBindingHandler;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.ItemModelMesher;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.item.Item;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventHandler;
 import net.minecraftforge.fml.common.Mod.Instance;
@@ -33,7 +35,7 @@ public class ModCore {
 
 	@EventHandler
 	public void construct(FMLConstructionEvent event) {
-		//MinecraftForge.EVENT_BUS.register(mainMenuHandler);
+		MinecraftForge.EVENT_BUS.register(new GunStatsGui(Minecraft.getMinecraft()));
 	}
 
 	@EventHandler
