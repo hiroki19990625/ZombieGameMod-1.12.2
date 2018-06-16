@@ -6,7 +6,14 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.boss.EntityDragon;
+import net.minecraft.entity.boss.EntityWither;
 import net.minecraft.entity.monster.EntityEnderman;
+import net.minecraft.entity.monster.EntityMagmaCube;
+import net.minecraft.entity.monster.EntitySlime;
+import net.minecraft.entity.passive.EntityAnimal;
+import net.minecraft.entity.passive.EntityVillager;
+import net.minecraft.entity.passive.EntityWaterMob;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.entity.projectile.EntityArrow;
@@ -18,6 +25,8 @@ import net.minecraft.util.DamageSource;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.RayTraceResult;
+import net.minecraft.util.text.TextComponentString;
+import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
 
 public abstract class GunAmmoBaseEntity extends EntityArrow {
@@ -70,6 +79,15 @@ public abstract class GunAmmoBaseEntity extends EntityArrow {
 
 			if (this.getIsCritical()) {
 				i += this.rand.nextInt(i / 2 + 2);
+			}
+
+			if (entity.posY + entity.getEyeHeight() - 0.4F < this.posY
+					&& this.posY < entity.posY + entity.getEyeHeight() + 0.4F && !isBadEntity(entity)) {
+				i *= 2;
+
+				if ((this.shootingEntity instanceof EntityPlayer)) {
+					this.shootingEntity.sendMessage(new TextComponentString(TextFormatting.RED + "Head Shot!"));
+				}
 			}
 
 			DamageSource damagesource;
@@ -166,9 +184,22 @@ public abstract class GunAmmoBaseEntity extends EntityArrow {
 		}
 	}
 
+	protected boolean isBadEntity(Entity entity) {
+		if (entity instanceof EntityVillager)
+			return false;
+		if (entity instanceof EntityAnimal)
+			return true;
+		if (entity instanceof EntityWaterMob)
+			return true;
+		if (entity instanceof EntitySlime || entity instanceof EntityMagmaCube)
+			return true;
+		if (entity instanceof EntityDragon || entity instanceof EntityWither)
+			return true;
+		return false;
+	}
+
 	@Override
 	protected ItemStack getArrowStack() {
-		// TODO 自動生成されたメソッド・スタブ
 		return new ItemStack(Items.AIR);
 	}
 
