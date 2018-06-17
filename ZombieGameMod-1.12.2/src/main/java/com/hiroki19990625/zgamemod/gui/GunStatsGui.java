@@ -42,17 +42,19 @@ public class GunStatsGui extends Gui {
 			NBTTagCompound gun = nbt.getCompoundTag("Gun");
 			int ammo = gun.getInteger("Ammo");
 			int stackAmmo = gun.getInteger("StackAmmo");
-			int xPos = 300;
-			int yPos = 150;
+			int xPos = 320;
+			int yPos = 180;
 
 			GlStateManager.pushAttrib();
 			GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
 			GlStateManager.disableLighting();
 			GlStateManager.enableAlpha();
 			GlStateManager.enableBlend();
-			String s = I18n.format("tooltip.gun.ammoStat", ammo, ((GunBaseItem) item).getMaxAmmo());
-			this.mc.fontRenderer.drawStringWithShadow(s, xPos + 1, yPos, Color.WHITE.getRGB());
+			String s1 = I18n.format("tooltip.gun.ammoStat", ammo, ((GunBaseItem) item).getMaxAmmo());
+			this.mc.fontRenderer.drawStringWithShadow(s1, xPos + 1, yPos, Color.WHITE.getRGB());
 			yPos += 10;
+			String s2 = I18n.format("tooltip.gun.stackAmmo", stackAmmo);
+			this.mc.fontRenderer.drawStringWithShadow(s2, xPos + 1, yPos, Color.WHITE.getRGB());
 			GlStateManager.popAttrib();
 		}
 
