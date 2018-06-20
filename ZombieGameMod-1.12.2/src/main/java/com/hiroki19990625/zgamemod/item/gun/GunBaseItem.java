@@ -2,6 +2,8 @@ package com.hiroki19990625.zgamemod.item.gun;
 
 import java.util.List;
 
+import org.lwjgl.input.Mouse;
+
 import com.hiroki19990625.zgamemod.ModCore;
 import com.hiroki19990625.zgamemod.entity.ammo.GunAmmoBaseEntity;
 import com.hiroki19990625.zgamemod.entity.ammo.NormalAmmoEntity;
@@ -16,9 +18,6 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.EnumActionResult;
-import net.minecraft.util.EnumHand;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.world.World;
@@ -46,75 +45,81 @@ public abstract class GunBaseItem extends Item {
 		int maxAmmo = this.getMaxAmmo();
 		int ammo = gun.getInteger("Ammo");
 		int stackAmmo = gun.getInteger("StackAmmo");
+		int duration = gun.getInteger("Duration");
+		int reloadDuration = gun.getInteger("ReloadDuration");
+		boolean isReload = gun.getBoolean("IsReload");
 		int i = (int) entityIn.posX;
 		int j = (int) entityIn.posY;
 		int k = (int) entityIn.posZ;
 
 		if (stackAmmo <= 0) {
 			stackAmmo = 0;
-			return;
-		}
 
-		if (InputKeyBindingHandler.reloadKey.isKeyDown()) {
-			if (ammo < maxAmmo) {
-				if (stackAmmo >= maxAmmo) {
-					int ammoCal = maxAmmo - ammo;
-					ammo = maxAmmo;
-					stackAmmo -= ammoCal;
-				} else {
-					int ammoCal = maxAmmo - ammo;
-					ammo = ammoCal;
-					stackAmmo = 0;
-				}
-
-				worldIn.playSound((EntityPlayer) null, (double) i + 0.5D, (double) j + 0.5D, (double) k + 0.5D,
-						this.getReloadSound(),
-						SoundCategory.NEUTRAL, 1.0F, 1.0F
-								/ (itemRand.nextFloat() * 0.4F + 1.2F));
-			}
-		}
-
-		this.setGunNBT(stack, gun, ammo, stackAmmo);
-	}
-
-	@Override
-	public int getMaxItemUseDuration(ItemStack par1ItemStack) {
-		return this.getUseDuration();
-	}
-
-	@Override
-	public ActionResult<ItemStack> onItemRightClick(World par2World, final EntityPlayer par3EntityPlayer,
-			EnumHand hand) {
-		par3EntityPlayer.setActiveHand(hand);
-		ItemStack par1ItemStack = par3EntityPlayer.getHeldItem(hand);
-
-		NBTTagCompound nbt = this.getGunNBT(par1ItemStack);
-		NBTTagCompound gun = nbt.getCompoundTag("Gun");
-		int ammo = gun.getInteger("Ammo");
-		int stackAmmo = gun.getInteger("StackAmmo");
-
-		if (ammo != 0) {
-			ammo -= this.getDiffAmmo();
-
-			float f = this.getAmmoSpeed();
-			int i = (int) par3EntityPlayer.posX;
-			int j = (int) par3EntityPlayer.posY;
-			int k = (int) par3EntityPlayer.posZ;
-			par2World.playSound((EntityPlayer) null, (double) i + 0.5D, (double) j + 0.5D, (double) k + 0.5D,
-					this.getShotSound(),
-					SoundCategory.NEUTRAL, 1.0F, 1.0F
-							/ (itemRand.nextFloat() * 0.4F + 1.2F) + f * 0.5F);
-			if (!par2World.isRemote) {
-				GunAmmoBaseEntity entity = this.shot(par2World, par3EntityPlayer);
-				par2World.spawnEntity(entity);
-			}
+			this.setGunNBT(stack, gun, ammo, stackAmmo, duration, reloadDuration, isReload);
 		} else {
+			if (InputKeyBindingHandler.reloadKey.isKeyDown()) {
+				if (ammo < maxAmmo && !isReload) {
+					reloadDuration = this.getMaxReloadDuration();
+					isReload = true;
+					if (stackAmmo >= maxAmmo) {
+						int ammoCal = maxAmmo - ammo;
+						ammo = maxAmmo;
+						stackAmmo -= ammoCal;
+					} else {
+						int ammoCal = maxAmmo - ammo;
+						int ammoCal2 = stackAmmo - ammoCal;
+						if (ammoCal2 <= 0) {
+							ammo += ammoCal + ammoCal2;
+							stackAmmo -= ammoCal + ammoCal2;
+						} else {
+							ammo += ammoCal;
+							stackAmmo -= ammoCal;
+						}
+					}
 
+					worldIn.playSound((EntityPlayer) null, (double) i + 0.5D, (double) j + 0.5D, (double) k + 0.5D,
+							this.getReloadSound(),
+							SoundCategory.NEUTRAL, 1.0F, 1.0F
+									/ (itemRand.nextFloat() * 0.4F + 1.2F));
+
+					this.setGunNBT(stack, gun, ammo, stackAmmo, duration, reloadDuration, isReload);
+				}
+			}
 		}
 
-		this.setGunNBT(par1ItemStack, nbt, ammo, stackAmmo);
+		if (isReload) {
+			reloadDuration--;
 
-		return new ActionResult<ItemStack>(EnumActionResult.SUCCESS, par1ItemStack);
+			this.setGunNBT(stack, gun, ammo, stackAmmo, duration, reloadDuration, isReload);
+		}
+
+		if (reloadDuration < 0 && isReload) {
+			isReload = false;
+
+			this.setGunNBT(stack, gun, ammo, stackAmmo, duration, reloadDuration, isReload);
+		}
+
+		if (Mouse.isButtonDown(1) && duration < 0 && !isReload && entityIn instanceof EntityPlayer) {
+			if (ammo != 0) {
+				duration = this.getMaxDuration();
+				ammo -= this.getDiffAmmo();
+
+				float f = this.getAmmoSpeed();
+				worldIn.playSound((EntityPlayer) null, (double) i + 0.5D, (double) j + 0.5D, (double) k + 0.5D,
+						this.getShotSound(),
+						SoundCategory.NEUTRAL, 1.0F, 1.0F
+								/ (itemRand.nextFloat() * 0.4F + 1.2F) + f * 0.5F);
+				if (!worldIn.isRemote) {
+					GunAmmoBaseEntity entity = this.shot(worldIn, (EntityPlayer) entityIn);
+					worldIn.spawnEntity(entity);
+				}
+			}
+
+			this.setGunNBT(stack, gun, ammo, stackAmmo, duration, reloadDuration, isReload);
+		} else if (!(duration < 0)) {
+			--duration;
+			this.setGunNBT(stack, gun, ammo, stackAmmo, duration, reloadDuration, isReload);
+		}
 	}
 
 	@Override
@@ -145,6 +150,9 @@ public abstract class GunBaseItem extends Item {
 			NBTTagCompound gun = new NBTTagCompound();
 			gun.setInteger("Ammo", this.getMaxAmmo());
 			gun.setInteger("StackAmmo", this.getMaxStackAmmo());
+			gun.setInteger("Duration", this.getMaxDuration());
+			gun.setInteger("ReloadDuration", this.getMaxReloadDuration());
+			gun.setBoolean("IsReload", false);
 
 			nbt.setTag("Gun", gun);
 		}
@@ -152,10 +160,14 @@ public abstract class GunBaseItem extends Item {
 		return nbt;
 	}
 
-	public void setGunNBT(ItemStack stack, NBTTagCompound nbt, int ammo, int stackAmmo) {
+	public void setGunNBT(ItemStack stack, NBTTagCompound nbt, int ammo, int stackAmmo, int duration,
+			int reloadDuration, boolean isReload) {
 		NBTTagCompound gun = nbt.getCompoundTag("Gun");
 		gun.setInteger("Ammo", ammo);
 		gun.setInteger("StackAmmo", stackAmmo);
+		gun.setInteger("Duration", duration);
+		gun.setInteger("ReloadDuration", reloadDuration);
+		gun.setBoolean("IsReload", isReload);
 
 		nbt.setTag("Gun", gun);
 		stack.setTagCompound(nbt);
@@ -177,8 +189,12 @@ public abstract class GunBaseItem extends Item {
 
 	public abstract SoundEvent getReloadSound();
 
-	public int getUseDuration() {
-		return 0;
+	public int getMaxDuration() {
+		return 2;
+	}
+
+	public int getMaxReloadDuration() {
+		return 20;
 	}
 
 	public float getAmmoSpeed() {

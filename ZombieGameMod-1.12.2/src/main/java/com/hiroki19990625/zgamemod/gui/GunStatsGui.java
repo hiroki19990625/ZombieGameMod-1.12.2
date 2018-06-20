@@ -42,8 +42,9 @@ public class GunStatsGui extends Gui {
 			NBTTagCompound gun = nbt.getCompoundTag("Gun");
 			int ammo = gun.getInteger("Ammo");
 			int stackAmmo = gun.getInteger("StackAmmo");
-			int xPos = 320;
-			int yPos = 180;
+			boolean isReload = gun.getBoolean("IsReload");
+			int xPos = 305;
+			int yPos = 170;
 
 			GlStateManager.pushAttrib();
 			GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
@@ -55,6 +56,11 @@ public class GunStatsGui extends Gui {
 			yPos += 10;
 			String s2 = I18n.format("tooltip.gun.stackAmmo", stackAmmo);
 			this.mc.fontRenderer.drawStringWithShadow(s2, xPos + 1, yPos, Color.WHITE.getRGB());
+			if (isReload) {
+				yPos += 10;
+				String s3 = "Reloading...";
+				this.mc.fontRenderer.drawStringWithShadow(s3, xPos + 1, yPos, Color.RED.getRGB());
+			}
 			GlStateManager.popAttrib();
 		}
 
