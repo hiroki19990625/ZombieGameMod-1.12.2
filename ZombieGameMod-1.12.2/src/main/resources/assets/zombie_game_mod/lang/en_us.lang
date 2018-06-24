@@ -3,6 +3,7 @@
 
 #Block
 tile.stageborder_block.name=Stage Boader Block
+tile.game_setup_block.name=Game Setup Block
 
 
 #Item
@@ -25,4 +26,4 @@ key.gun_reload.desc=Gun Reload Key
 
 
 #GUI
-gui.zombie_game_mod.main_menu.button=Play Zombie Game
+gui.game_setup.title=Game Setup

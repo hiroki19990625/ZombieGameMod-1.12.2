@@ -17,6 +17,6 @@ public class ZombieGameModGunTab extends CreativeTabs {
 	@Override
 	@SideOnly(Side.CLIENT)
 	public ItemStack getTabIconItem() {
-		return new ItemStack(RegisterManager.mp5);
+		return new ItemStack(RegisterManager.item_mp5);
 	}
 }

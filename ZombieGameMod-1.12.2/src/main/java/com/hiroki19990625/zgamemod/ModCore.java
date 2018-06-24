@@ -49,10 +49,10 @@ public class ModCore {
 	public void load(FMLInitializationEvent event) {
 		ItemModelMesher modelMesher = Minecraft.getMinecraft().getRenderItem().getItemModelMesher();
 
-		this.registerModel(modelMesher, Item.getItemFromBlock(RegisterManager.stageBorderBlock));
-		this.registerModel(modelMesher, Item.getItemFromBlock(RegisterManager.gameSetupBlock));
+		this.registerModel(modelMesher, Item.getItemFromBlock(RegisterManager.block_stageBorderBlock));
+		this.registerModel(modelMesher, Item.getItemFromBlock(RegisterManager.block_gameSetupBlock));
 
-		this.registerModel(modelMesher, RegisterManager.mp5);
+		this.registerModel(modelMesher, RegisterManager.item_mp5);
 	}
 
 	private void registerModel(ItemModelMesher modelMesher, Item item) {

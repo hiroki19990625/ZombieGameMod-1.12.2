@@ -37,7 +37,6 @@ public class StageBorderBlock extends Block {
 
 	@Override
 	public AxisAlignedBB getBoundingBox(IBlockState state, IBlockAccess source, BlockPos pos) {
-		// TODO 自動生成されたメソッド・スタブ
 		return new AxisAlignedBB(0f, 0f, 0f, 1f, 1f, 1f);
 	}
 
@@ -49,7 +48,6 @@ public class StageBorderBlock extends Block {
 
 	@Override
 	public AxisAlignedBB getCollisionBoundingBox(IBlockState blockState, IBlockAccess worldIn, BlockPos pos) {
-		// TODO 自動生成されたメソッド・スタブ
 		return new AxisAlignedBB(0.0125f, 0f, 0.0125f, 0.9875f, 0.9875f, 0.9875f);
 	}
 

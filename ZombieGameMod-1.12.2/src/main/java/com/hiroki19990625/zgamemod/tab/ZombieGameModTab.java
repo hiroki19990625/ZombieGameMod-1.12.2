@@ -18,6 +18,6 @@ public class ZombieGameModTab extends CreativeTabs {
 	@Override
 	@SideOnly(Side.CLIENT)
 	public ItemStack getTabIconItem() {
-		return new ItemStack(RegisterManager.stageBorderBlock);
+		return new ItemStack(RegisterManager.block_stageBorderBlock);
 	}
 }

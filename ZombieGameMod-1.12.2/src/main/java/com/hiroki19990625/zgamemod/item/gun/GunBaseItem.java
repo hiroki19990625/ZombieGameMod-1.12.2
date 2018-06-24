@@ -52,73 +52,78 @@ public abstract class GunBaseItem extends Item {
 		int j = (int) entityIn.posY;
 		int k = (int) entityIn.posZ;
 
-		if (stackAmmo <= 0) {
-			stackAmmo = 0;
+		if (entityIn instanceof EntityPlayer) {
+			ItemStack hand = ((EntityPlayer) entityIn).getHeldItemMainhand();
+			if (hand == stack) {
+				if (stackAmmo <= 0) {
+					stackAmmo = 0;
+					this.setGunNBT(stack, gun, ammo, stackAmmo, duration, reloadDuration, isReload);
+				} else {
+					if (InputKeyBindingHandler.reloadKey.isKeyDown()) {
+						if (ammo < maxAmmo && !isReload) {
+							reloadDuration = this.getMaxReloadDuration();
+							isReload = true;
+							if (stackAmmo >= maxAmmo) {
+								int ammoCal = maxAmmo - ammo;
+								ammo = maxAmmo;
+								stackAmmo -= ammoCal;
+							} else {
+								int ammoCal = maxAmmo - ammo;
+								int ammoCal2 = stackAmmo - ammoCal;
+								if (ammoCal2 <= 0) {
+									ammo += ammoCal + ammoCal2;
+									stackAmmo -= ammoCal + ammoCal2;
+								} else {
+									ammo += ammoCal;
+									stackAmmo -= ammoCal;
+								}
+							}
 
-			this.setGunNBT(stack, gun, ammo, stackAmmo, duration, reloadDuration, isReload);
-		} else {
-			if (InputKeyBindingHandler.reloadKey.isKeyDown()) {
-				if (ammo < maxAmmo && !isReload) {
-					reloadDuration = this.getMaxReloadDuration();
-					isReload = true;
-					if (stackAmmo >= maxAmmo) {
-						int ammoCal = maxAmmo - ammo;
-						ammo = maxAmmo;
-						stackAmmo -= ammoCal;
-					} else {
-						int ammoCal = maxAmmo - ammo;
-						int ammoCal2 = stackAmmo - ammoCal;
-						if (ammoCal2 <= 0) {
-							ammo += ammoCal + ammoCal2;
-							stackAmmo -= ammoCal + ammoCal2;
-						} else {
-							ammo += ammoCal;
-							stackAmmo -= ammoCal;
+							worldIn.playSound((EntityPlayer) null, (double) i + 0.5D, (double) j + 0.5D,
+									(double) k + 0.5D,
+									this.getReloadSound(),
+									SoundCategory.NEUTRAL, 1.0F, 1.0F
+											/ (itemRand.nextFloat() * 0.4F + 1.2F));
+
+							this.setGunNBT(stack, gun, ammo, stackAmmo, duration, reloadDuration, isReload);
 						}
 					}
+				}
 
-					worldIn.playSound((EntityPlayer) null, (double) i + 0.5D, (double) j + 0.5D, (double) k + 0.5D,
-							this.getReloadSound(),
-							SoundCategory.NEUTRAL, 1.0F, 1.0F
-									/ (itemRand.nextFloat() * 0.4F + 1.2F));
+				if (isReload) {
+					reloadDuration--;
 
 					this.setGunNBT(stack, gun, ammo, stackAmmo, duration, reloadDuration, isReload);
 				}
-			}
-		}
 
-		if (isReload) {
-			reloadDuration--;
+				if (reloadDuration < 0 && isReload) {
+					isReload = false;
 
-			this.setGunNBT(stack, gun, ammo, stackAmmo, duration, reloadDuration, isReload);
-		}
+					this.setGunNBT(stack, gun, ammo, stackAmmo, duration, reloadDuration, isReload);
+				}
 
-		if (reloadDuration < 0 && isReload) {
-			isReload = false;
+				if (Mouse.isButtonDown(1) && duration < 0 && !isReload) {
+					if (ammo != 0) {
+						duration = this.getMaxDuration();
+						ammo -= this.getDiffAmmo();
 
-			this.setGunNBT(stack, gun, ammo, stackAmmo, duration, reloadDuration, isReload);
-		}
+						float f = this.getAmmoSpeed();
+						worldIn.playSound((EntityPlayer) null, (double) i + 0.5D, (double) j + 0.5D, (double) k + 0.5D,
+								this.getShotSound(),
+								SoundCategory.NEUTRAL, 1.0F, 1.0F
+										/ (itemRand.nextFloat() * 0.4F + 1.2F) + f * 0.5F);
+						if (!worldIn.isRemote) {
+							GunAmmoBaseEntity entity = this.shot(worldIn, (EntityPlayer) entityIn);
+							worldIn.spawnEntity(entity);
+						}
+					}
 
-		if (Mouse.isButtonDown(1) && duration < 0 && !isReload && entityIn instanceof EntityPlayer) {
-			if (ammo != 0) {
-				duration = this.getMaxDuration();
-				ammo -= this.getDiffAmmo();
-
-				float f = this.getAmmoSpeed();
-				worldIn.playSound((EntityPlayer) null, (double) i + 0.5D, (double) j + 0.5D, (double) k + 0.5D,
-						this.getShotSound(),
-						SoundCategory.NEUTRAL, 1.0F, 1.0F
-								/ (itemRand.nextFloat() * 0.4F + 1.2F) + f * 0.5F);
-				if (!worldIn.isRemote) {
-					GunAmmoBaseEntity entity = this.shot(worldIn, (EntityPlayer) entityIn);
-					worldIn.spawnEntity(entity);
+					this.setGunNBT(stack, gun, ammo, stackAmmo, duration, reloadDuration, isReload);
+				} else if (!(duration < 0)) {
+					--duration;
+					this.setGunNBT(stack, gun, ammo, stackAmmo, duration, reloadDuration, isReload);
 				}
 			}
-
-			this.setGunNBT(stack, gun, ammo, stackAmmo, duration, reloadDuration, isReload);
-		} else if (!(duration < 0)) {
-			--duration;
-			this.setGunNBT(stack, gun, ammo, stackAmmo, duration, reloadDuration, isReload);
 		}
 	}
 

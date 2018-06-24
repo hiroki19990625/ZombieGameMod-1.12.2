@@ -3,6 +3,7 @@
 
 #Block
 tile.stageborder_block.name=ステージボーダーブロック
+tile.game_setup_block.name=ゲームセットアップブロック
 
 
 #Item
@@ -25,4 +26,4 @@ key.gun_reload.desc=Gun リロードキー
 
 
 #GUI
-gui.zombie_game_mod.main_menu.button=Play Zombie Game
+gui.game_setup.title=ゲームのセットアップ

@@ -21,13 +21,11 @@ public class MP5 extends GunBaseItem {
 	}
 
 	public SoundEvent getShotSound() {
-		// TODO 自動生成されたメソッド・スタブ
-		return RegisterManager.mp5_shot_sound;
+		return RegisterManager.sound_mp5_shot_sound;
 	}
 
 	public SoundEvent getReloadSound() {
-		// TODO 自動生成されたメソッド・スタブ
-		return RegisterManager.mp5_reload_sound;
+		return RegisterManager.sound_mp5_reload_sound;
 	}
 
 }

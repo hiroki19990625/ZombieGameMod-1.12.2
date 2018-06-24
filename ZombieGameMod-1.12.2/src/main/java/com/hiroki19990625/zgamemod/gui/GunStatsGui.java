@@ -6,7 +6,6 @@ import com.hiroki19990625.zgamemod.item.gun.GunBaseItem;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
-import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
@@ -20,7 +19,10 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 @SideOnly(Side.CLIENT)
 public class GunStatsGui extends Gui {
+
 	private Minecraft mc;
+
+	private int width;
 
 	public GunStatsGui(Minecraft mc) {
 		super();
@@ -43,26 +45,22 @@ public class GunStatsGui extends Gui {
 			int ammo = gun.getInteger("Ammo");
 			int stackAmmo = gun.getInteger("StackAmmo");
 			boolean isReload = gun.getBoolean("IsReload");
-			int xPos = 305;
-			int yPos = 170;
 
-			GlStateManager.pushAttrib();
-			GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
-			GlStateManager.disableLighting();
-			GlStateManager.enableAlpha();
-			GlStateManager.enableBlend();
+			this.width = event.getResolution().getScaledWidth();
+
 			String s1 = I18n.format("tooltip.gun.ammoStat", ammo, ((GunBaseItem) item).getMaxAmmo());
-			this.mc.fontRenderer.drawStringWithShadow(s1, xPos + 1, yPos, Color.WHITE.getRGB());
-			yPos += 10;
 			String s2 = I18n.format("tooltip.gun.stackAmmo", stackAmmo);
-			this.mc.fontRenderer.drawStringWithShadow(s2, xPos + 1, yPos, Color.WHITE.getRGB());
+			String s3 = "Reloading...";
+			int i = 75;
+			int j = 0;
+			this.mc.fontRenderer.drawStringWithShadow(s1, this.width / 2 + this.width / 5,
+					i + j++ * this.mc.fontRenderer.FONT_HEIGHT, Color.WHITE.getRGB());
+			this.mc.fontRenderer.drawStringWithShadow(s2, this.width / 2 + this.width / 5,
+					i + j++ * this.mc.fontRenderer.FONT_HEIGHT, Color.WHITE.getRGB());
 			if (isReload) {
-				yPos += 10;
-				String s3 = "Reloading...";
-				this.mc.fontRenderer.drawStringWithShadow(s3, xPos + 1, yPos, Color.RED.getRGB());
+				this.mc.fontRenderer.drawStringWithShadow(s3, this.width / 2 + this.width / 5,
+						i + j++ * this.mc.fontRenderer.FONT_HEIGHT, Color.RED.getRGB());
 			}
-			GlStateManager.popAttrib();
 		}
-
 	}
 }

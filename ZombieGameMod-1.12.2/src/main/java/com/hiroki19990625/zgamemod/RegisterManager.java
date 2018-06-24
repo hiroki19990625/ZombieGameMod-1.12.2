@@ -12,15 +12,18 @@ import net.minecraftforge.fml.common.registry.EntityRegistry;
 public class RegisterManager {
 
 	//Blocks
-	public static StageBorderBlock stageBorderBlock;
-	public static GameSetupBlock gameSetupBlock;
+	public static StageBorderBlock block_stageBorderBlock;
+	public static GameSetupBlock block_gameSetupBlock;
 
 	//Items
-	public static MP5 mp5;
+	public static MP5 item_mp5;
 
 	//Sounds
-	public static SoundEvent mp5_shot_sound;
-	public static SoundEvent mp5_reload_sound;
+	public static SoundEvent sound_mp5_shot_sound;
+	public static SoundEvent sound_mp5_reload_sound;
+
+	//GUI
+	public static final int gui_game_setup_gui = 200;
 
 	public RegisterManager() {
 		this.registerBlocks();
@@ -30,12 +33,12 @@ public class RegisterManager {
 	}
 
 	public void registerBlocks() {
-		stageBorderBlock = new StageBorderBlock();
-		gameSetupBlock = new GameSetupBlock();
+		block_stageBorderBlock = new StageBorderBlock();
+		block_gameSetupBlock = new GameSetupBlock();
 	}
 
 	public void registerItems() {
-		mp5 = new MP5();
+		item_mp5 = new MP5();
 	}
 
 	public void registerEntities() {
@@ -44,7 +47,7 @@ public class RegisterManager {
 	}
 
 	public void registerSounds() {
-		mp5_shot_sound = new SoundEvent(new ResourceLocation("zombie_game_mod", "mp5_shot_sound"));
-		mp5_reload_sound = new SoundEvent(new ResourceLocation("zombie_game_mod", "mp5_reload_sound"));
+		sound_mp5_shot_sound = new SoundEvent(new ResourceLocation("zombie_game_mod", "mp5_shot_sound"));
+		sound_mp5_reload_sound = new SoundEvent(new ResourceLocation("zombie_game_mod", "mp5_reload_sound"));
 	}
 }
